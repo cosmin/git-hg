@@ -1,0 +1,42 @@
+Author: Cosmin Stejerean (offbytwo)
+License: MIT
+Description: A set of scripts for checking out and tracking a mercrial project
+from git.
+
+* Dependencies *
+
+If this is a fresh checkout run
+
+  $ git submodule init
+  $ git submodule update
+
+to pull in fast-export. If for some reason you cannot do this
+get a copy of fast-export from http://repo.or.cz/w/fast-export.git and
+place it in the root of the checkout.
+
+* Installation *
+
+. /path/to/this/checkout/source.sh
+
+* Usage *
+
+- clone an hg repo, including ones over HTTP
+
+  $ git-hg-clone http://some/random/hg/repo local-git-repo-name
+
+- fetch updates from the hg repo
+
+  $ git-hg-fetch
+
+  or optionally
+
+  $ git-hg-pull # same as git-hg-fetch && git merge hg/branch_name
+
+
+* Structure *
+
+.git/hgcheckout - contains a bare mercurial checkout of the specified repo
+
+.git/hgremote   - contains a bare git repo clones from the mercurial one, this
+                  is added as a remote called "hg" in the base repo
+
