@@ -16,22 +16,25 @@ place it in the root of the checkout.
 
 * Installation *
 
-. /path/to/this/checkout/source.sh
+add /path/to/this/checkout/bin to your $PATH
 
 * Usage *
 
 - clone an hg repo, including ones over HTTP
 
-  $ git-hg-clone http://some/random/hg/repo local-git-repo-name
+  $ git-hg clone http://some/random/hg/repo [local-git-repo-name]
 
 - fetch updates from the hg repo
 
-  $ git-hg-fetch
+  $ git-hg fetch
 
   or optionally
 
-  $ git-hg-pull # same as git-hg-fetch && git merge hg/branch_name
+  $ git-hg pull # same as git-hg-fetch && git merge hg/branch_name
 
+- checkout a new branch from hg
+
+  $ git-hg checkout branch_name
 
 * Structure *
 
@@ -39,4 +42,3 @@ place it in the root of the checkout.
 
 .git/hgremote   - contains a bare git repo clones from the mercurial one, this
                   is added as a remote called "hg" in the base repo
-
