@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
 #
+# resolve symlinks
+#
+
+while [ -h "$PRG" ]; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname "$PRG"`/$link"
+    fi
+done
+
+#
 # GITHG_HOME: an absolute path to this script's parent directory
 #
-GITHG="$(which ${0})"
-GITHG_HOME="$(dirname ${GITHG})/.."
-INVOCATIONDIR="$(pwd)"
-cd "${GITHG_HOME}"
-GITHG_HOME="$(pwd)"
-cd "${INVOCATIONDIR}"
+GITHG_HOME=$(dirname ${PRG})/..
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
