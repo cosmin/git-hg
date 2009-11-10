@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 
-GITHG_HOME=$(dirname ${0})
+PRG=$0
+
+#
+# resolve symlinks
+#
+
+while [ -h "$PRG" ]; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname "$PRG"`/$link"
+    fi
+done
+
+GITHG_HOME=$(dirname ${PRG})/..
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
