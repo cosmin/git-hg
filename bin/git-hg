@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
 
-#
-# resolve symlinks
-#
+PRG=$0
 
-while [ -h "$PRG" ]; do
-    ls=`ls -ld "$PRG"`
-    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
-    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
-	PRG="$link"
-    else
-	PRG="`dirname "$PRG"`/$link"
-    fi
-done
+resolve_symlink () {
+    file="$1"
+    while [ -h "$file" ]; do
+        ls=`ls -ld "$file"`
+        link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+        if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+            file="$link"
+        else
+            file=`dirname "$1"`"/$link"
+        fi
+    done
+    echo "$file"
+}
 
-#
-# GITHG_HOME: an absolute path to this script's parent directory
-#
-GITHG_HOME=$(dirname ${PRG})/..
+absolutize_path () {
+    oldpwd=`pwd`
+    cd "$1"
+    abspath=`pwd`
+    cd "${oldpwd}"
+    echo "$abspath"
+}
+
+PRG=`resolve_symlink "$PRG"`
+PROGDIR=`dirname "$PRG"`
+GITHG_HOME=`absolutize_path "$PROGDIR/.."`
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
