@@ -2,21 +2,31 @@
 
 PRG=$0
 
-#
-# resolve symlinks
-#
+resolve_symlink () {
+    file="$1"
+    while [ -h "$file" ]; do
+        ls=`ls -ld "$file"`
+        link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+        if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+            file="$link"
+        else
+            file=`dirname "$1"`"/$link"
+        fi
+    done
+    echo "$file"
+}
 
-while [ -h "$PRG" ]; do
-    ls=`ls -ld "$PRG"`
-    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
-    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
-	PRG="$link"
-    else
-	PRG="`dirname "$PRG"`/$link"
-    fi
-done
+absolutize_path () {
+    oldpwd=`pwd`
+    cd "$1"
+    abspath=`pwd`
+    cd "${oldpwd}"
+    echo "$abspath"
+}
 
-GITHG_HOME=$(dirname ${PRG})/..
+PRG=`resolve_symlink "$PRG"`
+PROGDIR=`dirname "$PRG"`
+GITHG_HOME=`absolutize_path "$PROGDIR/.."`
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
