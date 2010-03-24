@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GITHG_HOME=$(dirname ${0})
+GITHG_HOME="$(dirname ${0})/.."
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
