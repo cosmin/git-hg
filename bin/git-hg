@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-GITHG_HOME="$(dirname ${0})/.."
+#
+# GITHG_HOME: an absolute path to this script's parent directory
+#
+GITHG="$(which ${0})"
+GITHG_HOME="$(dirname ${GITHG})/.."
+INVOCATIONDIR="$(pwd)"
+cd "${GITHG_HOME}"
+GITHG_HOME="$(pwd)"
+cd "${INVOCATIONDIR}"
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
