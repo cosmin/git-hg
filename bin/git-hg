@@ -19,8 +19,8 @@ absolutize_path () {
 }
 
 PRG=`resolve_symlink "$PRG"`
-PROGDIR=`dirname "$PRG"`
-GITHG_HOME=`absolutize_path "$PROGDIR/.."`
+PROGDIR=$(resolve_symlink $(dirname "$PRG"))
+GITHG_HOME=$(resolve_symlink $(absolutize_path "$PROGDIR/.."))
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
