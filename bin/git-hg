@@ -5,13 +5,7 @@ PRG=$0
 resolve_symlink () {
     file="$1"
     while [ -h "$file" ]; do
-        ls=`ls -ld "$file"`
-        link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
-        if expr "$link" : '^/' 2> /dev/null >/dev/null; then
-            file="$link"
-        else
-            file=`dirname "$1"`"/$link"
-        fi
+        file=`readlink "$file"`
     done
     echo "$file"
 }
