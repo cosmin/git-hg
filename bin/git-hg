@@ -15,19 +15,24 @@ function git-hg-clone {
     else
         CHECKOUT=$2
     fi
-    mkdir $CHECKOUT
-    cd $CHECKOUT
-    git init
-    hg clone -U $HG_REMOTE .git/hgcheckout
-    mkdir .git/hgremote
+    if [ -a $CHECKOUT ]; then
+	echo error: $CHECKOUT exists
+	exit 1
+    fi
+    git init $CHECKOUT
     (
-	cd .git/hgremote
-	git --bare init
-	$GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
+	cd $CHECKOUT
+	hg clone -U $HG_REMOTE .git/hgcheckout
+	mkdir .git/hgremote
+	(
+	    cd .git/hgremote
+	    git --bare init
+	    $GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
+	)
+	git remote add hg .git/hgremote
+	git fetch hg
+	git pull hg master
     )
-    git remote add hg .git/hgremote
-    git fetch hg
-    git pull hg master
 }
 
 function git-hg-fetch {
