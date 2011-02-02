@@ -23,10 +23,9 @@ function git-hg-clone {
     (
 	cd $CHECKOUT
 	hg clone -U $HG_REMOTE .git/hgcheckout
-	mkdir .git/hgremote
+	git init --bare .git/hgremote
 	(
 	    cd .git/hgremote
-	    git --bare init
 	    $GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
 	)
 	git remote add hg .git/hgremote
