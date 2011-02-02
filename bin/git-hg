@@ -5,7 +5,7 @@ set -e
 GITHG_HOME=$(readlink --canonicalize $(dirname $(readlink --canonicalize $0))/..)
 
 function git-current-branch {
-    echo "`git branch | grep "*" | awk '{print $2}'`"
+    git branch | egrep '^[*]' | cut --bytes 3-
 }
 
 function git-hg-clone {
@@ -17,14 +17,14 @@ function git-hg-clone {
     fi
     mkdir $CHECKOUT
     cd $CHECKOUT
-    CURRENT_PATH=`pwd`
     git init
     hg clone -U $HG_REMOTE .git/hgcheckout
     mkdir .git/hgremote
-    cd .git/hgremote
-    git --bare init
-    $GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
-    cd $CURRENT_PATH
+    (
+	cd .git/hgremote
+	git --bare init
+	$GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
+    )
     git remote add hg .git/hgremote
     git fetch hg
     git pull hg master
@@ -32,15 +32,15 @@ function git-hg-clone {
 
 function git-hg-fetch {
     hg -R .git/hgcheckout pull
-    CURRENT_PATH=`pwd`
-    cd .git/hgremote
-    $GITHG_HOME/fast-export/hg-fast-export.sh
-    cd $CURRENT_PATH
+    (
+	cd .git/hgremote
+	$GITHG_HOME/fast-export/hg-fast-export.sh
+    )
     git fetch hg
 }
 
 function git-hg-pull {
-    current_branch=`git-current-branch`
+    current_branch=$(git-current-branch)
     git-hg-fetch
     git merge hg/$current_branch
 }
