@@ -48,15 +48,7 @@ function git-hg-checkout {
     git checkout hg/$1 -b $1
 }
 
-if [ "$1" == "clone" ]; then
-    git-hg-clone $2 $3
-elif [ "$1" == "fetch" ]; then
-    git-hg-fetch
-elif [ "$1" == "pull" ]; then
-    git-hg-pull
-elif [ "$1" == "checkout" ]; then
-    git-hg-checkout $2
-else
+function usage {
     echo "To clone a mercurial repo run:"
     echo "  clone <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
@@ -64,5 +56,23 @@ else
     echo "  fetch                   fetch latest branches from mercurial"
     echo "  pull                    fetch and merge the into the current branch"
     echo "  checkout branch_name    checkout a mercurial branch"
-    exit 1
-fi
+}
+
+case "$1" in
+    clone)
+	git-hg-clone $2 $3
+	;;
+    fetch)
+	git-hg-fetch
+	;;
+    pull)
+	git-hg-pull
+	;;
+    checkout)
+	git-hg-checkout $2
+	;;
+    *)
+	usage
+	exit 1
+	;;
+esac
