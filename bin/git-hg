@@ -1,26 +1,6 @@
 #!/usr/bin/env bash
 
-PRG=$0
-
-resolve_symlink () {
-    file="$1"
-    while [ -h "$file" ]; do
-        file=`readlink "$file"`
-    done
-    echo "$file"
-}
-
-absolutize_path () {
-    oldpwd=`pwd`
-    cd "$1"
-    abspath=`pwd`
-    cd "${oldpwd}"
-    echo "$abspath"
-}
-
-PRG=`resolve_symlink "$PRG"`
-PROGDIR=$(resolve_symlink $(dirname "$PRG"))
-GITHG_HOME=$(resolve_symlink $(absolutize_path "$PROGDIR/.."))
+GITHG_HOME=$(readlink --canonicalize $(dirname $(readlink --canonicalize $0))/..)
 
 function git-current-branch {
     echo "`git branch | grep "*" | awk '{print $2}'`"
