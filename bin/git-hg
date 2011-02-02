@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 GITHG_HOME=$(readlink --canonicalize $(dirname $(readlink --canonicalize $0))/..)
 
 function git-current-branch {
