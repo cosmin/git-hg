@@ -7,8 +7,7 @@ from git.
 
 If this is a fresh checkout run
 
-  $ git submodule init
-  $ git submodule update
+  $ git submodule update --init
 
 to pull in fast-export. If for some reason you cannot do this
 get a copy of fast-export from http://repo.or.cz/w/fast-export.git and
