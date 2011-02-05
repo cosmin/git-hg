@@ -5,7 +5,7 @@ from git.
 
 * Dependencies *
 
-You'll need Mercurial and Python installed and in your $PATH.
+Mercurial (hg) and python must be installed and in your $PATH.
 
 If this is a fresh checkout run
 
@@ -17,7 +17,8 @@ place it in the root of the checkout.
 
 * Installation *
 
-add /path/to/this/checkout/bin to your $PATH
+Either add /path/to/this/checkout/bin to your $PATH, or symbolic link
+/path/to/this/checkout/bin/git-hg into a directory on your $PATH.
 
 * Usage *
 
