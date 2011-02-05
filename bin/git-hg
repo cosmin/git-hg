@@ -44,9 +44,8 @@ function git-hg-fetch {
 }
 
 function git-hg-pull {
-    current_branch=$(git-current-branch)
     git-hg-fetch
-    git merge hg/$current_branch
+    git merge hg/$(git-current-branch)
 }
 
 function git-hg-checkout {
