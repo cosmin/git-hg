@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-cd fast-export
-echo "`pwd`"
-git checkout master
-git pull origin
-cd ..
+git submodule foreach git checkout master '&&' git pull
