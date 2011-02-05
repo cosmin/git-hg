@@ -5,6 +5,8 @@ from git.
 
 * Dependencies *
 
+You'll need Mercurial and Python installed and in your $PATH.
+
 If this is a fresh checkout run
 
   $ git submodule init
