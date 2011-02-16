@@ -3,12 +3,22 @@
 set -e
 
 GITHG_HOME=$(readlink --canonicalize $(dirname $(readlink --canonicalize $0))/..)
+HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
 
 function git-current-branch {
     git branch | egrep '^[*]' | cut --bytes 3-
 }
 
+function check-hg-fast-export {
+    if [ \! -x $HG_FAST_EXPORT ]; then
+	echo "error: executable not found, $HG_FAST_EXPORT"
+	echo '  (one possible fix: run "git submodule update --init" in hg-git repo)'
+	exit 1
+    fi
+}
+
 function git-hg-clone {
+    check-hg-fast-export
     HG_REMOTE=$1
     if [ -z "$2" ]; then
         CHECKOUT=$(basename $1)
@@ -26,7 +36,7 @@ function git-hg-clone {
 	git init --bare .git/hgremote
 	(
 	    cd .git/hgremote
-	    $GITHG_HOME/fast-export/hg-fast-export.sh -r ../hgcheckout
+	    $HG_FAST_EXPORT -r ../hgcheckout
 	)
 	git remote add hg .git/hgremote
 	git fetch hg
@@ -35,10 +45,11 @@ function git-hg-clone {
 }
 
 function git-hg-fetch {
+    check-hg-fast-export
     hg -R .git/hgcheckout pull
     (
 	cd .git/hgremote
-	$GITHG_HOME/fast-export/hg-fast-export.sh
+	$HG_FAST_EXPORT
     )
     git fetch hg
 }
