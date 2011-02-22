@@ -12,7 +12,7 @@ function git-current-branch {
 function check-hg-fast-export {
     if [ \! -x $HG_FAST_EXPORT ]; then
 	echo "error: executable not found, $HG_FAST_EXPORT"
-	echo '  (one possible fix: run "git submodule update --init" in hg-git repo)'
+	echo '  (one possible fix: run "git submodule update --init" in git-hg repo)'
 	exit 1
     fi
 }
