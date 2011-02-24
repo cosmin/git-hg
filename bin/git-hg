@@ -64,6 +64,12 @@ function git-hg-checkout {
     git checkout hg/$1 -b $1
 }
 
+function git-hg-push {
+    HG_REPO=$1
+    hg convert . .git/hgcheckout
+    hg -R .git/hgcheckout push $HG_REPO
+}
+
 function usage {
     echo "To clone a mercurial repo run:"
     echo "  clone <path/to/mercurial/repo> [local_checkout_path]"
@@ -87,6 +93,9 @@ case "$1" in
     checkout)
 	git-hg-checkout $2
 	;;
+    push)
+        git-hg-push $2
+        ;;
     *)
 	usage
 	exit 1
