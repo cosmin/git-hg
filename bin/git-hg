@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+if which python2 >&/dev/null; then
+  PYTHON=python2
+fi
 
 set -e
 
