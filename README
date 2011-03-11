@@ -1,7 +1,7 @@
 Author: Cosmin Stejerean (offbytwo)
 License: MIT
-Description: A set of scripts for checking out and tracking a mercrial project
-from git.
+Description: A set of scripts for checking out and tracking a mercurial project
+from git. Push supported added as well although it is still experimental.
 
 * Dependencies *
 
