@@ -6,7 +6,16 @@ fi
 
 set -e
 
-# Functionality also available with GNU coreutils readlink --canonicalize
+# Try to use GNU Coreutils readlink --canonicalize if available,
+# falling back to less robust shell script only if not found.
+if which greadlink >&/dev/null; then
+    canon="greadlink --canonicalize"
+elif readlink --canonicalize / >&/dev/null; then
+    canon="readlink --canonicalize"
+else
+    canon=canonicalize
+fi
+
 function canonicalize {
     path="$1"
 
@@ -26,7 +35,7 @@ function canonicalize {
     printf "%s/%s\n" "$cdir" "$file"
 }
 
-GITHG_HOME=$(canonicalize $(dirname $(canonicalize $0))/..)
+GITHG_HOME=$($canon $(dirname $($canon $0))/..)
 HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
 
 function git-current-branch {
