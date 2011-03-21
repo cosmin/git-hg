@@ -1,28 +1,28 @@
 #!/bin/bash
 
 if which python2 >&/dev/null; then
-  PYTHON=python2
+    PYTHON=python2
 fi
 
 set -e
 
 function canonicalize {
-	path="$1"
+    path="$1"
 
-	while [ -L "$path" ]; do
-		dir=`dirname "$path"`
-		path=`ls -l "$path" | sed -e 's/.* -> //'`
-		cd "$dir"
-	done
-
+    while [ -L "$path" ]; do
 	dir=`dirname "$path"`
-	file=`basename "$path"`
-	if [ ! -d "$dir" ]; then
+	path=`ls -l "$path" | sed -e 's/.* -> //'`
+	cd "$dir"
+    done
+
+    dir=`dirname "$path"`
+    file=`basename "$path"`
+    if [ ! -d "$dir" ]; then
 	echo "canonize: $dir: No such directory" >&2
 	exit 1
-	fi
-	cdir=`cd "$dir" && pwd -P`
-	printf "%s/%s\n" "$cdir" "$file"
+    fi
+    cdir=`cd "$dir" && pwd -P`
+    printf "%s/%s\n" "$cdir" "$file"
 }
 
 GITHG_HOME=$(canonicalize $(dirname $(canonicalize $0))/..)
