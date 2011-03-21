@@ -11,18 +11,18 @@ function canonicalize {
     path="$1"
 
     while [ -L "$path" ]; do
-	dir=`dirname "$path"`
-	path=`ls -l "$path" | sed -e 's/.* -> //'`
+	dir=$(dirname "$path")
+	path=$(ls -l "$path" | sed -e 's/.* -> //')
 	cd "$dir"
     done
 
-    dir=`dirname "$path"`
-    file=`basename "$path"`
+    dir=$(dirname "$path")
+    file=$(basename "$path")
     if [ ! -d "$dir" ]; then
 	echo "canonize: $dir: No such directory" >&2
 	exit 1
     fi
-    cdir=`cd "$dir" && pwd -P`
+    cdir=$(cd "$dir" && pwd -P)
     printf "%s/%s\n" "$cdir" "$file"
 }
 
