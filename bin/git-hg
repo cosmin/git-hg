@@ -6,6 +6,7 @@ fi
 
 set -e
 
+# Functionality also available with GNU coreutils readlink --canonicalize
 function canonicalize {
     path="$1"
 
