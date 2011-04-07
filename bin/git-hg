@@ -29,7 +29,7 @@ GITHG_HOME=$(canonicalize $(dirname $(canonicalize $0))/..)
 HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
 
 function git-current-branch {
-    git branch | egrep '^[*]' | cut --bytes 3-
+    git branch | egrep '^[*]' | sed 's/^\* \(.\)/\1/'
 }
 
 function check-hg-fast-export {
