@@ -69,7 +69,7 @@ function git-hg-clone {
 
 function git-hg-fetch {
     check-hg-fast-export
-    hg -R .git/hgcheckout pull
+    hg -R .git/hgcheckout pull --rebase
     (
 	cd .git/hgremote
 	$HG_FAST_EXPORT
