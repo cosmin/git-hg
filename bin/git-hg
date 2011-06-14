@@ -79,7 +79,11 @@ function git-hg-fetch {
 
 function git-hg-pull {
     git-hg-fetch
-    git merge hg/$(git-current-branch)
+    if [ "--rebase" = "$1" ]; then
+        git rebase hg/$(git-current-branch)
+    else
+        git merge hg/$(git-current-branch)
+    fi
 }
 
 function git-hg-checkout {
@@ -111,7 +115,7 @@ case "$1" in
 	git-hg-fetch
 	;;
     pull)
-	git-hg-pull
+	git-hg-pull $2
 	;;
     checkout)
 	git-hg-checkout $2
