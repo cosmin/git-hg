@@ -103,7 +103,8 @@ function usage {
     echo ""
     echo "To work with a cloned mercurial repo use: "
     echo "  fetch                   fetch latest branches from mercurial"
-    echo "  pull                    fetch and merge the into the current branch"
+    echo "  pull [ --rebase ]       fetch and merge (or rebase) into the current branch"
+    echo "  push                    push changes back to mercurial"
     echo "  checkout branch_name    checkout a mercurial branch"
 }
 
