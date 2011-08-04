@@ -42,7 +42,13 @@ function check-hg-fast-export {
 
 function git-hg-clone {
     check-hg-fast-export
+
+    if [[ $1 == "--force" ]]; then
+        FORCE="--force"
+        shift
+    fi
     HG_REMOTE=$1
+
     if [ -z "$2" ]; then
         CHECKOUT=$(basename $1)
     else
@@ -59,7 +65,7 @@ function git-hg-clone {
 	git init --bare .git/hgremote
 	(
 	    cd .git/hgremote
-	    $HG_FAST_EXPORT -r ../hgcheckout
+	    $HG_FAST_EXPORT -r ../hgcheckout $FORCE
 	)
 	git remote add hg .git/hgremote
 	git fetch hg
@@ -97,6 +103,8 @@ function usage {
     echo "To clone a mercurial repo run:"
     echo "  clone <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
+    echo " if that fails (due to unnamed heads) try git-hg clone --force <path/to/mercurial/repo> [local_checkout_path]"
+    echo ""
     echo "To work with a cloned mercurial repo use: "
     echo "  fetch                   fetch latest branches from mercurial"
     echo "  pull                    fetch and merge the into the current branch"
@@ -105,7 +113,7 @@ function usage {
 
 case "$1" in
     clone)
-	git-hg-clone $2 $3
+	git-hg-clone $2 $3 $4
 	;;
     fetch)
 	git-hg-fetch
