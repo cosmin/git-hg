@@ -20,6 +20,14 @@ place it in the root of the checkout.
 Either add /path/to/this/checkout/bin to your $PATH, or symbolic link
 /path/to/this/checkout/bin/git-hg into a directory on your $PATH.
 
+Alternatively you can execute
+
+  $ make
+  $ sudo make install
+
+to install the script and all required fast-export files in /usr/local (you
+can change the destination by passing eg PREFIX=/usr/bin to make install).
+
 * Usage *
 
 - clone an hg repo, including ones over HTTP
