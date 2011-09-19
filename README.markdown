@@ -34,7 +34,7 @@ Either add `/path/to/this/checkout/bin` to your `$PATH`, or symbolic link
 
         $ git-hg fetch
 
-  or optionally:
+    or optionally:
 
         $ git-hg pull # same as git-hg-fetch && git merge hg/branch_name
 
