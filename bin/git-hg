@@ -2,6 +2,7 @@
 
 if which python2 >&/dev/null; then
   PYTHON=python2
+  export PYTHON
 fi
 
 set -e
