@@ -76,21 +76,29 @@ function git-hg-clone {
 
 function git-hg-fetch {
     check-hg-fast-export
+    if [[ $1 == "--force" ]]; then
+        FORCE="--force"
+        shift
+    fi
     hg -R .git/hgcheckout pull
     (
 	cd .git/hgremote
-	$HG_FAST_EXPORT
+	$HG_FAST_EXPORT $FORCE
     )
     git fetch hg
 }
 
 function git-hg-pull {
-    git-hg-fetch
+    git-hg-fetch $1
     git merge hg/$(git-current-branch)
 }
 
 function git-hg-checkout {
-    git-hg-fetch
+    if [[ $1 == "--force" ]]; then
+        FORCE="--force"
+        shift
+    fi
+    git-hg-fetch $FORCE
     git checkout hg/$1 -b $1
 }
 
@@ -118,13 +126,13 @@ case "$1" in
 	git-hg-clone $2 $3 $4
 	;;
     fetch)
-	git-hg-fetch
+	git-hg-fetch $2
 	;;
     pull)
-	git-hg-pull
+	git-hg-pull $2
 	;;
     checkout)
-	git-hg-checkout $2
+	git-hg-checkout $2 $3
 	;;
     push)
         git-hg-push $2
