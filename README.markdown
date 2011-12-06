@@ -41,6 +41,10 @@ Either add `/path/to/this/checkout/bin` to your `$PATH`, or symbolic link
 - Checkout a new branch from hg:
 
         $ git-hg checkout branch_name
+        
+- Push changes back to hg, optionally to a specific destination:
+
+		$ git-hg push [destination]
 
 ## Structure ##
 
