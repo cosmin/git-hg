@@ -110,6 +110,7 @@ function usage {
     echo "  fetch                   fetch latest branches from mercurial"
     echo "  pull                    fetch and merge the into the current branch"
     echo "  checkout branch_name    checkout a mercurial branch"
+    echo "  push [destination]      push latest changes to mercurial"
 }
 
 case "$1" in
