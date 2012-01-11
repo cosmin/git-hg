@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if which python2 >&/dev/null; then
   PYTHON=python2
@@ -70,7 +70,13 @@ function git-hg-clone {
 	)
 	git remote add hg .git/hgremote
 	git fetch hg
-	git pull hg master
+        if git branch -r | grep -q master; then
+	    local branch="master"
+        else
+            local branch=`cd .git/hgcheckout/ && hg tip | grep branch | awk '{print $2}'`
+        fi
+        git config hg.tracking.master $branch
+        git pull hg $branch
     )
 }
 
@@ -90,7 +96,32 @@ function git-hg-fetch {
 
 function git-hg-pull {
     git-hg-fetch $1
-    git merge hg/$(git-current-branch)
+
+    local current_branch=`git-current-branch`
+    local remote_branch
+
+    if [ $current_branch == "master" ]; then
+        remote_branch=`git config hg.tracking.master || true`
+        
+        if [[ -z $remote_branch ]]; then
+            if git branch -r | grep -q master; then
+                remote_branch="master"
+                git config hg.tracking.master $branch
+            else
+                echo "ERROR: Cannot determine remote branch. There is no remote branch called master, and hg.tracking.master not set. Merge the desired branch manually."
+                exit 1
+            fi
+        fi
+    else
+        remote_branch=`git config hg.tracking.${current_branch} || true`
+        if [[ -z $remote_branch ]]; then
+             echo "ERROR: Cannot determine the remote branch to pull from. Run git merge manually against the desired remote branch."
+             echo "Alternatively, set hg.tracking.$current_branch to the name of the branch in hg the current branch should track"
+             exit 1
+        fi
+    fi
+
+    git merge hg/$remote_branch
 }
 
 function git-hg-checkout {
