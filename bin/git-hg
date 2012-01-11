@@ -105,7 +105,7 @@ function git-hg-fetch {
         FORCE="--force"
         shift
     fi
-    hg -R .git/hgcheckout pull
+    hg -R .git/hgcheckout pull --rebase
     (
 	cd .git/hgremote
 	$HG_FAST_EXPORT $FORCE
