@@ -36,18 +36,27 @@ function canonicalize {
     printf "%s/%s\n" "$cdir" "$file"
 }
 
-GITHG_HOME=$($canon $(dirname $($canon $0))/..)
-HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
-
 function git-current-branch {
     git branch | egrep '^[*]' | sed 's/^\* \(.\)/\1/'
 }
 
 function check-hg-fast-export {
-    if [ ! -x $HG_FAST_EXPORT ]; then
-	echo "error: executable not found, $HG_FAST_EXPORT"
-	echo '  (one possible fix: run "git submodule update --init" in git-hg repo)'
-	exit 1
+    # Search for hg-fast-export $PATH, use if available, if not fall back
+    # to looking around for it in sibling directory of bin directory of
+    # the current exeuctable, possibly tracing back along symbolic link.
+    if type hg-fast-export > /dev/null 2>&1 ; then
+	HG_FAST_EXPORT=hg-fast-export
+    else
+	GITHG_HOME=$($canon $(dirname $($canon $0))/..)
+	HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
+	if type $HG_FAST_EXPORT > /dev/null 2>&1 ; then
+	    echo looking good > /dev/null
+	else
+	    echo "error: executable not found, $HG_FAST_EXPORT"
+	    echo 'Possible fixes: run "git submodule update --init" in git-hg repo, or'
+	    echo 'install hg-fast-export executable in directory on $PATH.'
+	    exit 1
+	fi
     fi
 }
 
