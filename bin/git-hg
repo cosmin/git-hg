@@ -9,22 +9,22 @@ set -e
 
 # Functionality also available with GNU coreutils readlink --canonicalize
 function canonicalize {
-	path="$1"
-
-	while [ -L "$path" ]; do
-		dir=`dirname "$path"`
-		path=`ls -l "$path" | sed -e 's/.* -> //'`
-		cd "$dir"
-	done
-
-	dir=`dirname "$path"`
-	file=`basename "$path"`
-	if [ ! -d "$dir" ]; then
+    path="$1"
+    
+    while [ -L "$path" ]; do
+	dir=$(dirname "$path")
+	path=$(ls -l "$path" | sed -e 's/.* -> //')
+	cd "$dir"
+    done
+    
+    dir=$(dirname "$path")
+    file=$(basename "$path")
+    if [ ! -d "$dir" ]; then
 	echo "canonize: $dir: No such directory" >&2
 	exit 1
-	fi
-	cdir=`cd "$dir" && pwd -P`
-	printf "%s/%s\n" "$cdir" "$file"
+    fi
+    cdir=$(cd "$dir" && pwd -P)
+    printf "%s/%s\n" "$cdir" "$file"
 }
 
 GITHG_HOME=$(canonicalize $(dirname $(canonicalize $0))/..)
@@ -44,13 +44,13 @@ function check-hg-fast-export {
 
 function git-hg-clone {
     check-hg-fast-export
-
+    
     if [[ $1 == "--force" ]]; then
         FORCE="--force"
         shift
     fi
     HG_REMOTE=$1
-
+    
     if [ -z "$2" ]; then
         CHECKOUT=$(basename $1)
     else
@@ -74,7 +74,7 @@ function git-hg-clone {
         if git branch -r | grep -q master; then
 	    local branch="master"
         else
-            local branch=`cd .git/hgcheckout/ && hg tip | grep branch | awk '{print $2}'`
+            local branch=$(cd .git/hgcheckout/ && hg tip | grep branch | awk '{print $2}')
         fi
         git config hg.tracking.master $branch
         git pull hg $branch
@@ -98,11 +98,11 @@ function git-hg-fetch {
 function git-hg-pull {
     git-hg-fetch $1
 
-    local current_branch=`git-current-branch`
+    local current_branch=$(git-current-branch)
     local remote_branch
 
     if [ $current_branch == "master" ]; then
-        remote_branch=`git config hg.tracking.master || true`
+        remote_branch=$(git config hg.tracking.master || true)
         
         if [[ -z $remote_branch ]]; then
             if git branch -r | grep -q master; then
@@ -114,7 +114,7 @@ function git-hg-pull {
             fi
         fi
     else
-        remote_branch=`git config hg.tracking.${current_branch} || true`
+        remote_branch=$(git config hg.tracking.${current_branch} || true)
         if [[ -z $remote_branch ]]; then
              echo "ERROR: Cannot determine the remote branch to pull from. Run git merge manually against the desired remote branch."
              echo "Alternatively, set hg.tracking.$current_branch to the name of the branch in hg the current branch should track"
