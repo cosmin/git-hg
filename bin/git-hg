@@ -179,13 +179,15 @@ function usage {
     echo "To clone a mercurial repo run:"
     echo "  clone <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
-    echo " if that fails (due to unnamed heads) try git-hg clone --force <path/to/mercurial/repo> [local_checkout_path]"
+    echo " if that fails (due to unnamed heads) try:"
+    echo "  git-hg clone --force <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
     echo "To work with a cloned mercurial repo use: "
-    echo "  fetch                   fetch latest branches from mercurial"
-    echo "  pull [ --rebase ]       fetch and merge (or rebase) into the current branch"
-    echo "  push [destination]      push latest changes to mercurial"
-    echo "  checkout branch_name    checkout a mercurial branch"
+    echo "  fetch [ --force ]                   fetch latest branches from mercurial"
+    echo "  pull [ --force ] [ --rebase ]       fetch and merge (or rebase) into the"
+    echo "                                      current branch"
+    echo "  push [destination]                  push latest changes to mercurial"
+    echo "  checkout [ --force ] branch_name    checkout a mercurial branch"
 }
 
 case "$1" in
