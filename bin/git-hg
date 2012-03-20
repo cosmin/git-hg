@@ -114,7 +114,20 @@ function git-hg-fetch {
 }
 
 function git-hg-pull {
-    git-hg-fetch
+    while [ $# -gt 0 ]; do
+        case "$1" in
+        --rebase)
+            REBASE="--rebase"
+            shift
+            ;;
+        --force)
+            FORCE="--force"
+            shift
+            ;;
+        esac
+    done
+
+    git-hg-fetch $FORCE
 
     local current_branch=$(git-current-branch)
     local remote_branch
@@ -140,7 +153,7 @@ function git-hg-pull {
         fi
     fi
 
-    if [ "--rebase" = "$1" ]; then
+    if [ "--rebase" = "$REBASE" ]; then
         git rebase hg/$remote_branch
     else
         git merge hg/$remote_branch
@@ -183,7 +196,7 @@ case "$1" in
 	git-hg-fetch $2
 	;;
     pull)
-	git-hg-pull $2
+	git-hg-pull $2 $3
 	;;
     checkout)
 	git-hg-checkout $2 $3
