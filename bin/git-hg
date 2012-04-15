@@ -114,7 +114,20 @@ function git-hg-fetch {
 }
 
 function git-hg-pull {
-    git-hg-fetch
+    while [ $# -gt 0 ]; do
+        case "$1" in
+        --rebase)
+            REBASE="--rebase"
+            shift
+            ;;
+        --force)
+            FORCE="--force"
+            shift
+            ;;
+        esac
+    done
+
+    git-hg-fetch $FORCE
 
     local current_branch=$(git-current-branch)
     local remote_branch
@@ -140,7 +153,7 @@ function git-hg-pull {
         fi
     fi
 
-    if [ "--rebase" = "$1" ]; then
+    if [ "--rebase" = "$REBASE" ]; then
         git rebase hg/$remote_branch
     else
         git merge hg/$remote_branch
@@ -166,13 +179,15 @@ function usage {
     echo "To clone a mercurial repo run:"
     echo "  clone <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
-    echo " if that fails (due to unnamed heads) try git-hg clone --force <path/to/mercurial/repo> [local_checkout_path]"
+    echo " if that fails (due to unnamed heads) try:"
+    echo "  git-hg clone --force <path/to/mercurial/repo> [local_checkout_path]"
     echo ""
     echo "To work with a cloned mercurial repo use: "
-    echo "  fetch                   fetch latest branches from mercurial"
-    echo "  pull [ --rebase ]       fetch and merge (or rebase) into the current branch"
-    echo "  push [destination]      push latest changes to mercurial"
-    echo "  checkout branch_name    checkout a mercurial branch"
+    echo "  fetch [ --force ]                   fetch latest branches from mercurial"
+    echo "  pull [ --force ] [ --rebase ]       fetch and merge (or rebase) into the"
+    echo "                                      current branch"
+    echo "  push [destination]                  push latest changes to mercurial"
+    echo "  checkout [ --force ] branch_name    checkout a mercurial branch"
 }
 
 case "$1" in
@@ -183,7 +198,7 @@ case "$1" in
 	git-hg-fetch $2
 	;;
     pull)
-	git-hg-pull $2
+	git-hg-pull $2 $3
 	;;
     checkout)
 	git-hg-checkout $2 $3
