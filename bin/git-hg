@@ -190,22 +190,12 @@ function usage {
     echo "  checkout [ --force ] branch_name    checkout a mercurial branch"
 }
 
-case "$1" in
-    clone)
-	git-hg-clone $2 $3 $4
+CMD=$1
+shift
+case "$CMD" in
+    clone|fetch|pull|checkout|push)
+	git-hg-$CMD "$@"
 	;;
-    fetch)
-	git-hg-fetch $2
-	;;
-    pull)
-	git-hg-pull $2 $3
-	;;
-    checkout)
-	git-hg-checkout $2 $3
-	;;
-    push)
-        git-hg-push $2
-        ;;
     *)
 	usage
 	exit 1
