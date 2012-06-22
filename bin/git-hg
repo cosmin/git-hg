@@ -137,7 +137,7 @@ function git-hg-pull {
         if [[ -z $remote_branch ]]; then
             if git branch -r | grep -q master; then
                 remote_branch="master"
-                git config hg.tracking.master $branch
+                git config hg.tracking.master master
             else
                 echo "ERROR: Cannot determine remote branch. There is no remote branch called master, and hg.tracking.master not set. Merge the desired branch manually."
                 exit 1
