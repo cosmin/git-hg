@@ -88,7 +88,7 @@ function git-hg-clone {
 	)
 	git remote add hg .git/hgremote
 	git fetch hg
-        if git branch -r | grep -q master; then
+        if git rev-parse --verify -q remotes/hg/master > /dev/null; then
 	    local branch="master"
         else
             local branch=$(cd .git/hgcheckout/ && hg tip | grep branch | awk '{print $2}')
@@ -138,7 +138,7 @@ function git-hg-pull {
         remote_branch=$(git config hg.tracking.master || true)
         
         if [[ -z $remote_branch ]]; then
-            if git branch -r | grep -q master; then
+            if git rev-parse --verify -q remotes/hg/master > /dev/null; then
                 remote_branch="master"
                 git config hg.tracking.master master
             else
