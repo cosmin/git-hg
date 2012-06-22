@@ -118,13 +118,12 @@ function git-hg-pull {
         case "$1" in
         --rebase)
             REBASE="--rebase"
-            shift
             ;;
         --force)
             FORCE="--force"
-            shift
             ;;
         esac
+	shift
     done
 
     git-hg-fetch $FORCE
