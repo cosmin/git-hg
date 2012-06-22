@@ -49,9 +49,7 @@ function check-hg-fast-export {
     else
 	GITHG_HOME=$($canon $(dirname $($canon $0))/..)
 	HG_FAST_EXPORT=$GITHG_HOME/fast-export/hg-fast-export.sh
-	if type $HG_FAST_EXPORT > /dev/null 2>&1 ; then
-	    echo looking good > /dev/null
-	else
+	if ! type $HG_FAST_EXPORT > /dev/null 2>&1 ; then
 	    echo "error: executable not found, $HG_FAST_EXPORT"
 	    echo 'Possible fixes: run "git submodule update --init" in git-hg repo, or'
 	    echo 'install hg-fast-export executable in directory on $PATH.'
