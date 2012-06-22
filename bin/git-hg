@@ -37,7 +37,8 @@ function canonicalize {
 }
 
 function git-current-branch {
-    git branch | egrep '^[*]' | sed 's/^\* \(.\)/\1/'
+    local ref
+    ref=$(git symbolic-ref -q HEAD) && echo "${ref#refs/heads/}"
 }
 
 function check-hg-fast-export {
@@ -126,8 +127,12 @@ function git-hg-pull {
 
     git-hg-fetch $FORCE
 
-    local current_branch=$(git-current-branch)
-    local remote_branch
+    local current_branch remote_branch
+
+    if ! current_branch=$(git-current-branch); then
+	    echo "ERROR: You are not currently on a branch."
+	    exit 1
+    fi
 
     if [[ $current_branch == "master" ]]; then
         remote_branch=$(git config hg.tracking.master || true)
