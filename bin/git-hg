@@ -70,7 +70,7 @@ function git-hg-clone {
     HG_REMOTE=$1
     
     if [ -z "$2" ]; then
-        CHECKOUT=$(basename $1)
+        CHECKOUT=$(basename ${1%#*})
     else
         CHECKOUT=$2
     fi
