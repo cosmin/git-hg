@@ -20,7 +20,7 @@ fi
 function canonicalize {
     path="$1"
     
-    while [ -L "$path" ]; do
+    while [[ -L "$path" ]]; do
 	dir=$(dirname "$path")
 	path=$(ls -l "$path" | sed -e 's/.* -> //')
 	cd "$dir"
@@ -28,7 +28,7 @@ function canonicalize {
     
     dir=$(dirname "$path")
     file=$(basename "$path")
-    if [ ! -d "$dir" ]; then
+    if [[ ! -d "$dir" ]]; then
 	echo "canonize: $dir: No such directory" >&2
 	exit 1
     fi
@@ -67,12 +67,12 @@ function git-hg-clone {
     fi
     HG_REMOTE=$1
     
-    if [ -z "$2" ]; then
+    if [[ $# -lt 2 ]]; then
         CHECKOUT=$(basename ${1%#*})
     else
         CHECKOUT=$2
     fi
-    if [ -a $CHECKOUT ]; then
+    if [[ -a $CHECKOUT ]]; then
 	echo error: $CHECKOUT exists
 	exit 1
     fi
@@ -112,7 +112,7 @@ function git-hg-fetch {
 }
 
 function git-hg-pull {
-    while [ $# -gt 0 ]; do
+    while [[ $# -gt 0 ]]; do
         case "$1" in
         --rebase)
             REBASE="--rebase"
@@ -129,7 +129,7 @@ function git-hg-pull {
     local current_branch=$(git-current-branch)
     local remote_branch
 
-    if [ $current_branch == "master" ]; then
+    if [[ $current_branch == "master" ]]; then
         remote_branch=$(git config hg.tracking.master || true)
         
         if [[ -z $remote_branch ]]; then
@@ -150,7 +150,7 @@ function git-hg-pull {
         fi
     fi
 
-    if [ "--rebase" = "$REBASE" ]; then
+    if [[ "$REBASE" == "--rebase" ]]; then
         git rebase hg/$remote_branch
     else
         git merge hg/$remote_branch
