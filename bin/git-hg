@@ -79,9 +79,9 @@ function git-hg-clone {
 	exit 1
     fi
     git init $CHECKOUT
+    hg clone -U $HG_REMOTE $CHECKOUT/.git/hgcheckout
     (
 	cd $CHECKOUT
-	hg clone -U $HG_REMOTE .git/hgcheckout
 	git init --bare .git/hgremote
 	(
 	    cd .git/hgremote
