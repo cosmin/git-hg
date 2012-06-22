@@ -173,7 +173,7 @@ function git-hg-checkout {
 
 function git-hg-push {
     HG_REPO=$1
-    hg convert . .git/hgcheckout
+    hg --config extensions.convert= convert . .git/hgcheckout
     hg -R .git/hgcheckout push "$HG_REPO"
 }
 
