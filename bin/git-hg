@@ -190,6 +190,8 @@ function usage {
     echo "  checkout [ --force ] branch_name    checkout a mercurial branch"
 }
 
+FORCE=
+REBASE=
 CMD=$1
 shift
 case "$CMD" in
