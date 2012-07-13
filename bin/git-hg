@@ -36,6 +36,14 @@ function canonicalize {
     printf "%s/%s\n" "$cdir" "$file"
 }
 
+function get-gitdir {
+    if [ -n "${GIT_DIR}" ]; then
+	echo "error: environment variable GIT_DIR must not be set"
+	exit 1
+    fi
+    GITDIR="$(git rev-parse --git-dir)"
+}
+
 function git-current-branch {
     local ref
     ref=$(git symbolic-ref -q HEAD) && echo "${ref#refs/heads/}"
@@ -78,20 +86,21 @@ function git-hg-clone {
 	exit 1
     fi
     git init "$CHECKOUT"
-    hg clone -U "$HG_REMOTE" "$CHECKOUT/.git/hgcheckout"
     (
 	cd "$CHECKOUT"
-	git init --bare .git/hgremote
+	get-gitdir
+	hg clone -U "$HG_REMOTE" "${GITDIR}/hgcheckout"
+	git init --bare ${GITDIR}/hgremote
 	(
-	    cd .git/hgremote
+	    cd ${GITDIR}/hgremote
 	    "$HG_FAST_EXPORT" -r ../hgcheckout $FORCE
 	)
-	git remote add hg .git/hgremote
+	git remote add hg ${GITDIR}/hgremote
 	git fetch hg
         if git rev-parse --verify -q remotes/hg/master > /dev/null; then
 	    local branch="master"
         else
-            local branch=$(cd .git/hgcheckout/ && hg tip | grep branch | awk '{print $2}')
+            local branch=$(cd ${GITDIR}/hgcheckout/ && hg tip | grep branch | awk '{print $2}')
         fi
         git config hg.tracking.master "$branch"
         git pull hg "$branch"
@@ -104,9 +113,10 @@ function git-hg-fetch {
         FORCE="--force"
         shift
     fi
-    hg -R .git/hgcheckout pull
+    get-gitdir
+    hg -R ${GITDIR}/hgcheckout pull
     (
-	cd .git/hgremote
+	cd ${GITDIR}/hgremote
 	"$HG_FAST_EXPORT" $FORCE
     )
     git fetch hg
@@ -173,8 +183,9 @@ function git-hg-checkout {
 
 function git-hg-push {
     HG_REPO=$1
-    hg --config extensions.convert= convert . .git/hgcheckout
-    hg -R .git/hgcheckout push "$HG_REPO"
+    get-gitdir
+    hg --config extensions.convert= convert . ${GITDIR}/hgcheckout
+    hg -R ${GITDIR}/hgcheckout push "$HG_REPO"
 }
 
 function usage {
