@@ -22,7 +22,7 @@ clean:
 
 $(GITHG_F): $(GITHG_S)
 	mkdir -p $(BUILDDIR)
-	$(SED) -e '/^GITHG_HOME=/s:=.*:='"'$(GITHGEXECDIR)'"':' $< > $@
+	$(SED) -e '/^[[:blank:]]*GITHG_HOME=/s:=.*:='"'$(GITHGEXECDIR)'"':' $< > $@
 
 $(HGFE_F):
 	git submodule update --init
