@@ -19,13 +19,13 @@ fi
 
 function canonicalize {
     path="$1"
-    
+
     while [ -L "$path" ]; do
 	dir=$(dirname "$path")
 	path=$(ls -l "$path" | sed -e 's/.* -> //')
 	cd "$dir"
     done
-    
+
     dir=$(dirname "$path")
     file=$(basename "$path")
     if [ ! -d "$dir" ]; then
@@ -62,13 +62,13 @@ function check-hg-fast-export {
 
 function git-hg-clone {
     check-hg-fast-export
-    
+
     if [[ $1 == "--force" ]]; then
         FORCE="--force"
         shift
     fi
     HG_REMOTE=$1
-    
+
     if [ -z "$2" ]; then
         CHECKOUT=$(basename $1)
     else
@@ -85,7 +85,7 @@ function git-hg-clone {
 	git init --bare .git/hgremote
 	(
 	    cd .git/hgremote
-	    $HG_FAST_EXPORT -r ../hgcheckout $FORCE
+	    $HG_FAST_EXPORT -r ../hgcheckout --quiet $FORCE
 	)
 	git remote add hg .git/hgremote
 	git fetch hg
@@ -121,7 +121,7 @@ function git-hg-pull {
 
     if [ $current_branch == "master" ]; then
         remote_branch=$(git config hg.tracking.master || true)
-        
+
         if [[ -z $remote_branch ]]; then
             if git branch -r | grep -q master; then
                 remote_branch="master"
