@@ -81,7 +81,7 @@ function git-hg-clone {
     else
         CHECKOUT=$2
     fi
-    if [[ -a $CHECKOUT ]]; then
+    if [[ -e $CHECKOUT && "$(ls -A $f)" ]]; then
 	echo "error: $CHECKOUT exists"
 	exit 1
     fi
