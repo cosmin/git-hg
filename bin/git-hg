@@ -117,7 +117,7 @@ function git-hg-fetch {
     hg -R ${GITDIR}/hgcheckout pull
     (
 	cd ${GITDIR}/hgremote
-	"$HG_FAST_EXPORT" $FORCE
+	"$HG_FAST_EXPORT" -r ../hgcheckout $FORCE
     )
     git fetch hg
 }
