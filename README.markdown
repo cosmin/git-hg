@@ -11,6 +11,8 @@ from git. Push supported added as well although it is still experimental.
 
 Mercurial (`hg`) and python must be installed and in your `$PATH`.
 
+On Windows, you will also need a copy of Mercurial for Python, available at [the Mercurial downloads page](http://mercurial.selenic.com/downloads/)
+
 If this is a fresh checkout run
 
     $ git submodule update --init
