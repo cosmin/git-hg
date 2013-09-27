@@ -32,7 +32,7 @@ Alternatively you can execute
         $ sudo make install
 
 to install the script and all required fast-export files in `/usr/local` (you
-can change the destination by passing eg `PREFIX=/usr` to make install)
+can change the destination by passing eg `prefix=/usr` to make install)
 
 ## Usage ##
 
