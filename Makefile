@@ -1,8 +1,8 @@
-prefix=/usr/local
+PREFIX=/usr/local
 DESTDIR=
 BUILDDIR=build
-BINDIR=$(prefix)/bin
-LIBEXECDIR=$(prefix)/lib
+BINDIR=$(PREFIX)/bin
+LIBEXECDIR=$(PREFIX)/lib
 
 GITHGEXECDIR=$(LIBEXECDIR)/git-hg
 FASTEXPORTDIR=$(GITHGEXECDIR)/fast-export
