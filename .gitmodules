@@ -1,3 +1,3 @@
 [submodule "fast-export"]
 	path = fast-export
-	url = http://repo.or.cz/r/fast-export.git
+	url = https://github.com/frej/fast-export
