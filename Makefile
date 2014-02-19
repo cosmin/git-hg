@@ -8,7 +8,6 @@ GITHGEXECDIR=$(LIBEXECDIR)/git-hg
 FASTEXPORTDIR=$(GITHGEXECDIR)/fast-export
 
 INSTALL="$(which install) -c"
-SED=$(which sed)
 
 GITHG_S=bin/git-hg
 GITHG_F=$(BUILDDIR)/git-hg
@@ -22,7 +21,7 @@ clean:
 
 $(GITHG_F): $(GITHG_S)
 	mkdir -p $(BUILDDIR)
-	$(SED) 's|GITHG_HOME=.*|GITHG_HOME=$(GITHGEXECDIR)|' $< > $@
+	sed 's|GITHG_HOME=.*|GITHG_HOME=$(GITHGEXECDIR)|g' $< > $@
 
 $(HGFE_F):
 	git submodule update --init
