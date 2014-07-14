@@ -1,0 +1,9 @@
+{
+  "name": "git-hg",
+  "version": "0.0.1",
+  "description": "A git-hg utility for checking out and tracking a mercurial repo.",
+  "global": "true",
+  "install": "make install",
+  "scripts": [ "bin/git-hg" ]
+}
+
