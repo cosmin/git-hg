@@ -34,7 +34,7 @@ $(GITHG_F): $(HGFE_D)
 	rm -rf $(HGFE_D)
 	git submodule update --init
 	mkdir -p $(BUILDDIR)
-	$(SED) 's|GITHG_HOME=.*|GITHG_HOME=$(GITHGEXECDIR)|' $< > $@
+	$(SED) 's|GITHG_HOME=.*|GITHG_HOME=$(GITHGEXECDIR)|' $(GITHG_S) > $@
 
 $(HGFE_D):
 	rm -rf $(HGFE_D)
