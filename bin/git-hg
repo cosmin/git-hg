@@ -90,17 +90,17 @@ git_hg_clone() {
 	cd "$CHECKOUT"
 	get_gitdir
 	hg clone -U "$HG_REMOTE" "${GITDIR}/hgcheckout"
-	git init --bare ${GITDIR}/hgremote
+	git init --bare "${GITDIR}/hgremote"
 	(
-	    cd ${GITDIR}/hgremote
+	    cd "${GITDIR}/hgremote"
 	    $HG_FAST_EXPORT -r ../hgcheckout --quiet $FORCE
 	)
-	git remote add hg ${GITDIR}/hgremote
+	git remote add hg "${GITDIR}/hgremote"
 	git fetch hg
         if git rev-parse --verify -q remotes/hg/master > /dev/null; then
 	    local branch="master"
         else
-            local branch=$(cd ${GITDIR}/hgcheckout/ && hg tip | grep branch | awk '{print $2}')
+            local branch=$(cd "${GITDIR}/hgcheckout/" && hg tip | grep branch | awk '{print $2}')
         fi
         git config hg.tracking.master "$branch"
         git pull hg "$branch"
@@ -114,9 +114,9 @@ git_hg_fetch() {
         shift
     fi
     get_gitdir
-    hg -R ${GITDIR}/hgcheckout pull
+    hg -R "${GITDIR}/hgcheckout" pull
     (
-	cd ${GITDIR}/hgremote
+	cd "${GITDIR}/hgremote"
 	"$HG_FAST_EXPORT" -r ../hgcheckout $FORCE
     )
     git fetch hg
@@ -184,8 +184,8 @@ git_hg_checkout() {
 git_hg_push() {
     HG_REPO=$1
     get_gitdir
-    hg --config extensions.convert= convert . ${GITDIR}/hgcheckout
-    hg -R ${GITDIR}/hgcheckout push "$HG_REPO"
+    hg --config extensions.convert= convert . "${GITDIR}/hgcheckout"
+    hg -R "${GITDIR}/hgcheckout" push "$HG_REPO"
 }
 
 usage() {
