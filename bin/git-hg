@@ -20,7 +20,7 @@ fi
 canonicalize() {
     path="$1"
     
-    while [[ -L "$path" ]]; do
+    while [ -L "$path" ]; do
 	dir=$(dirname "$path")
 	path=$(ls -l "$path" | sed -e 's/.* -> //')
 	cd "$dir"
@@ -28,7 +28,7 @@ canonicalize() {
 
     dir=$(dirname "$path")
     file=$(basename "$path")
-    if [[ ! -d "$dir" ]]; then
+    if [ ! -d "$dir" ]; then
 	echo "canonize: $dir: No such directory" >&2
 	exit 1
     fi
@@ -70,18 +70,18 @@ check-hg-fast-export() {
 git-hg-clone() {
     check-hg-fast-export
 
-    if [[ $1 == "--force" ]]; then
+    if [ "$1" = "--force" ]; then
         FORCE="--force"
         shift
     fi
     HG_REMOTE=$1
     
-    if [[ $# -lt 2 ]]; then
+    if [ $# -lt 2 ]; then
         CHECKOUT=$(basename "${1%#*}")
     else
         CHECKOUT=$2
     fi
-    if [[ -e $CHECKOUT && "$(ls -A "$CHECKOUT")" ]]; then
+    if [ -e "$CHECKOUT" ] && [ -n "$(ls -A "$CHECKOUT")" ]; then
 	echo "error: $CHECKOUT exists"
 	exit 1
     fi
@@ -109,7 +109,7 @@ git-hg-clone() {
 
 git-hg-fetch() {
     check-hg-fast-export
-    if [[ $1 == "--force" ]]; then
+    if [ "$1" = "--force" ]; then
         FORCE="--force"
         shift
     fi
@@ -123,7 +123,7 @@ git-hg-fetch() {
 }
 
 git-hg-pull() {
-    while [[ $# -gt 0 ]]; do
+    while [ $# -gt 0 ]; do
         case "$1" in
         --rebase)
             REBASE="--rebase"
@@ -144,10 +144,10 @@ git-hg-pull() {
 	    exit 1
     fi
 
-    if [[ $current_branch == "master" ]]; then
+    if [ "$current_branch" = "master" ]; then
         remote_branch=$(git config hg.tracking.master || true)
 
-        if [[ -z $remote_branch ]]; then
+        if [ -z "$remote_branch" ]; then
             if git rev-parse --verify -q remotes/hg/master > /dev/null; then
                 remote_branch="master"
                 git config hg.tracking.master master
@@ -158,14 +158,14 @@ git-hg-pull() {
         fi
     else
         remote_branch=$(git config "hg.tracking.$current_branch" || true)
-        if [[ -z $remote_branch ]]; then
+        if [ -z "$remote_branch" ]; then
              echo "ERROR: Cannot determine the remote branch to pull from. Run git merge manually against the desired remote branch."
              echo "Alternatively, set hg.tracking.$current_branch to the name of the branch in hg the current branch should track"
              exit 1
         fi
     fi
 
-    if [[ "$REBASE" == "--rebase" ]]; then
+    if [ "$REBASE" = "--rebase" ]; then
         git rebase "hg/$remote_branch"
     else
         git merge "hg/$remote_branch"
@@ -173,7 +173,7 @@ git-hg-pull() {
 }
 
 git-hg-checkout() {
-    if [[ $1 == "--force" ]]; then
+    if [ "$1" = "--force" ]; then
         FORCE="--force"
         shift
     fi
