@@ -36,7 +36,7 @@ canonicalize() {
     printf "%s/%s\n" "$cdir" "$file"
 }
 
-get-gitdir() {
+get_gitdir() {
     if [ -n "${GIT_DIR}" ]; then
 	echo "error: environment variable GIT_DIR must not be set"
 	exit 1
@@ -44,12 +44,12 @@ get-gitdir() {
     GITDIR="$(git rev-parse --git-dir)"
 }
 
-git-current-branch() {
+git_current_branch() {
     local ref
     ref=$(git symbolic-ref -q HEAD) && echo "${ref#refs/heads/}"
 }
 
-check-hg-fast-export() {
+check_hg_fast_export() {
     # Search for hg-fast-export $PATH, use if available, if not fall back
     # to looking around for it in sibling directory of bin directory of
     # the current exeuctable, possibly tracing back along symbolic link.
@@ -67,8 +67,8 @@ check-hg-fast-export() {
     fi
 }
 
-git-hg-clone() {
-    check-hg-fast-export
+git_hg_clone() {
+    check_hg_fast_export
 
     if [ "$1" = "--force" ]; then
         FORCE="--force"
@@ -88,7 +88,7 @@ git-hg-clone() {
     git init "$CHECKOUT"
     (
 	cd "$CHECKOUT"
-	get-gitdir
+	get_gitdir
 	hg clone -U "$HG_REMOTE" "${GITDIR}/hgcheckout"
 	git init --bare ${GITDIR}/hgremote
 	(
@@ -107,13 +107,13 @@ git-hg-clone() {
     )
 }
 
-git-hg-fetch() {
-    check-hg-fast-export
+git_hg_fetch() {
+    check_hg_fast_export
     if [ "$1" = "--force" ]; then
         FORCE="--force"
         shift
     fi
-    get-gitdir
+    get_gitdir
     hg -R ${GITDIR}/hgcheckout pull
     (
 	cd ${GITDIR}/hgremote
@@ -122,7 +122,7 @@ git-hg-fetch() {
     git fetch hg
 }
 
-git-hg-pull() {
+git_hg_pull() {
     while [ $# -gt 0 ]; do
         case "$1" in
         --rebase)
@@ -135,11 +135,11 @@ git-hg-pull() {
 	shift
     done
 
-    git-hg-fetch $FORCE
+    git_hg_fetch $FORCE
 
     local current_branch remote_branch
 
-    if ! current_branch=$(git-current-branch); then
+    if ! current_branch=$(git_current_branch); then
 	    echo "ERROR: You are not currently on a branch."
 	    exit 1
     fi
@@ -172,18 +172,18 @@ git-hg-pull() {
     fi
 }
 
-git-hg-checkout() {
+git_hg_checkout() {
     if [ "$1" = "--force" ]; then
         FORCE="--force"
         shift
     fi
-    git-hg-fetch $FORCE
+    git_hg_fetch $FORCE
     git checkout "hg/$1" -b "$1"
 }
 
-git-hg-push() {
+git_hg_push() {
     HG_REPO=$1
-    get-gitdir
+    get_gitdir
     hg --config extensions.convert= convert . ${GITDIR}/hgcheckout
     hg -R ${GITDIR}/hgcheckout push "$HG_REPO"
 }
@@ -209,7 +209,7 @@ CMD=$1
 shift
 case "$CMD" in
     clone|fetch|pull|checkout|push)
-	git-hg-$CMD "$@"
+	git_hg_$CMD "$@"
 	;;
     *)
 	usage
