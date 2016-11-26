@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if which python2 >&/dev/null; then
+if which python2 >/dev/null 2>&1; then
     PYTHON=python2
     export PYTHON
 fi
@@ -9,9 +9,9 @@ set -e
 
 # Try to use GNU Coreutils readlink --canonicalize if available,
 # falling back to less robust shell script only if not found.
-if which greadlink >&/dev/null; then
+if which greadlink >/dev/null 2>&1; then
     canon="greadlink --canonicalize"
-elif readlink --canonicalize / >&/dev/null; then
+elif readlink --canonicalize / >/dev/null 2>&1; then
     canon="readlink --canonicalize"
 else
     canon=canonicalize
